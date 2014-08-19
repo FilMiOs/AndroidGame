@@ -102,9 +102,9 @@ public class Starting extends Activity {
             @Override
             public void onClick(View view) {
                 if (TOGGLE_ON_CLICK) {
-                    mSystemUiHider.toggle();
+                    //mSystemUiHider.toggle();
                 } else {
-                    mSystemUiHider.show();
+                   //mSystemUiHider.show();
                 }
             }
         });
@@ -125,6 +125,16 @@ public class Starting extends Activity {
         delayedHide(100);
     }
 
+    private View.OnClickListener startListener = new View.OnClickListener(){
+
+        @Override
+        public void onClick(View view) {
+            ;
+        }
+
+
+
+    };
 
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
