@@ -83,7 +83,6 @@ public class MazeCreator {
         int counter = (size_x*size_y);
         Random r = new Random();
 
-        loop:
         while(counter>0) {
             Log.d("Counter",String.valueOf(counter));
             int direction = r.nextInt(4) ;
@@ -91,51 +90,46 @@ public class MazeCreator {
             switch (direction) {
                 case 0:
 
-                    if(position_y-1<0) {
-                        continue loop;
+                    if(position_y-1>0) {
+                        maze[position_x][position_y].north = true;
+                        position_y--;
+                        maze[position_x][position_y].south = true;
+                        counter--;
                     }
-                    maze[position_x][position_y].north = true;
-                    position_y--;
-                    maze[position_x][position_y].south = true;
                     break;
                 case 1:
 
-                    if(position_x+1>size_x) {
-                        continue loop;
+                    if(position_x+1<size_x) {
+                        maze[position_x][position_y].east = true;
+                        ++position_x;
+                        maze[position_x][position_y].west = true;
+                        counter--;
                     }
-                    maze[position_x][position_y].east = true;
-                    ++position_x;
-                    maze[position_x][position_y].west = true;
                     break;
                 case 2:
-                    if(position_x-1<0) {
-                        continue loop;
+                    if(position_x-1>0) {
+                        maze[position_x][position_y].west = true;
+                        --position_x;
+                        maze[position_x][position_y].east = true;
+                        counter--;
                     }
-                    maze[position_x][position_y].west = true;
-                    --position_x;
-                    maze[position_x][position_y].east = true;
-
                     break;
                 case 3:
                     if(position_y+1<size_y) {
-                        continue loop;
+                        maze[position_x][position_y].south = true;
+                        ++position_y;
+                        maze[position_x][position_y].north = true;
+                        counter--;
                     }
-                    maze[position_x][position_y].south = true;
-                    ++position_y;
-                    maze[position_x][position_y].north = true;
                     break;
             }
-            counter--;
-
         }
-
-
-
     }
 
 
     public String getMazeAsText(Field[][] maze) {
         StringBuilder sb = new StringBuilder();
+        sb.append("\n");
         for(int i=0;i<size_x;i++) {
             for(int j=0;j<size_y;j++){
                 if(maze[i][j].north) {
@@ -143,7 +137,6 @@ public class MazeCreator {
                 } else {
                     sb.append("  ");
                 }
-
             }
             sb.append("\n");
             for(int j=0;j<size_y;j++){
@@ -152,10 +145,9 @@ public class MazeCreator {
                 } else {
                     sb.append("  ");
                 }
-
             }
-
         }
+        Log.e("MAZE",sb.toString());
         return sb.toString();
     }
 
