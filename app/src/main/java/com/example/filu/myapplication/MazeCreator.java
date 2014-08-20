@@ -1,5 +1,7 @@
 package com.example.filu.myapplication;
 
+import android.util.Log;
+
 import java.util.Random;
 
 /**
@@ -10,51 +12,59 @@ public class MazeCreator {
     private int level;
     private int size_x, size_y;
 
+    public Field[][] getMaze() {
+        return maze;
+    }
+
     private Field[][] maze;
 
     public MazeCreator(int level) {
         this.level = level;
 
-        size_x = ((level * 3) + 12)/3;
-        size_y = ((level * 2) +10)/2;
+        this.size_x = ((level * 3) + 12)/3;
+        this.size_y = ((level * 2) +10)/2;
 
-       this.maze = generateMaze();
+        generateMaze();
 
     }
 
     private void setSize_x(int size_x) {
         this.size_x = size_x;
     }
-
     private void setSize_y(int size_y) {
         this.size_y = size_y;
     }
     public int getSize_x(){
         return size_x;
     }
-
     public int getSize_y(){
         return size_y;
     }
 
     public Field[][] generateMaze() {
 
-        maze = new Field[size_x][size_y];
+        this.maze = new Field[size_x][size_y];
+        for (int i = 0; i < size_x ; i++) {
+            for (int j = 0; j < size_y ; j++) {
+                this.maze[i][j] = new Field();
+            }
+        }
+        --size_x;
+        --size_y;
         setEndings();
         generatePath();
 
 
 
-
-        return maze;
+        return this.maze;
     }
 
     private void setEndings() {
 
-        maze[0][0].north = true;
-        maze[0][0].visited = true;
-        maze[size_x][size_y].south = true;
-        maze[size_x][size_y].visited = true;
+        this.maze[0][0].north = true;
+        this.maze[0][0].visited = true;
+        this.maze[size_x][size_y].south = true;
+        this.maze[size_x][size_y].visited = true;
 
 
     }
@@ -70,44 +80,83 @@ public class MazeCreator {
 
         int position_y=0;
         int position_x=0;
-        int counter = size_x*size_y;
-        while(counter<0) {
+        int counter = (size_x*size_y);
+        Random r = new Random();
 
-            Random r = new Random();
-            int direction = r.nextInt(4 - 1) +4;
+        loop:
+        while(counter>0) {
+            Log.d("Counter",String.valueOf(counter));
+            int direction = r.nextInt(4) ;
+            Log.w("MazeCreator", String.valueOf(direction) );
             switch (direction) {
                 case 0:
-                    --position_y;
-                    if(position_y<0) {
-                        position_y++;
+
+                    if(position_y-1<0) {
+                        continue loop;
                     }
+                    maze[position_x][position_y].north = true;
+                    position_y--;
+                    maze[position_x][position_y].south = true;
                     break;
                 case 1:
-                    ++position_x;
-                    if(position_x>size_x) {
-                        position_x--;
+
+                    if(position_x+1>size_x) {
+                        continue loop;
                     }
+                    maze[position_x][position_y].east = true;
+                    ++position_x;
+                    maze[position_x][position_y].west = true;
                     break;
                 case 2:
-                    --position_x;
-                    if(position_x<0) {
-                        position_x++;
+                    if(position_x-1<0) {
+                        continue loop;
                     }
+                    maze[position_x][position_y].west = true;
+                    --position_x;
+                    maze[position_x][position_y].east = true;
+
                     break;
                 case 3:
-                    ++position_y;
-                    if(position_y<size_y) {
-                        position_y--;
+                    if(position_y+1<size_y) {
+                        continue loop;
                     }
+                    maze[position_x][position_y].south = true;
+                    ++position_y;
+                    maze[position_x][position_y].north = true;
                     break;
             }
-
+            counter--;
 
         }
+
 
 
     }
 
 
-}
+    public String getMazeAsText(Field[][] maze) {
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<size_x;i++) {
+            for(int j=0;j<size_y;j++){
+                if(maze[i][j].north) {
+                    sb.append("_").append(" ");
+                } else {
+                    sb.append("  ");
+                }
 
+            }
+            sb.append("\n");
+            for(int j=0;j<size_y;j++){
+                if(maze[i][j].east) {
+                    sb.append("|").append(" ");
+                } else {
+                    sb.append("  ");
+                }
+
+            }
+
+        }
+        return sb.toString();
+    }
+
+}

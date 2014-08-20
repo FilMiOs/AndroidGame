@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
+
 import com.example.filu.myapplication.R;
 
 /**
@@ -49,12 +51,16 @@ public class Starting extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MazeCreator mc = new MazeCreator(1);
+        Field[][] maze =  mc.getMaze();
+
+
 
         setContentView(R.layout.activity_starting);
 
         final View controlsView = findViewById(R.id.fullscreen_content_controls);
         final View contentView = findViewById(R.id.fullscreen_content);
-
+        ((TextView)contentView).setText(mc.getMazeAsText(maze));
         // Set up an instance of SystemUiHider to control the system UI for
         // this activity.
         mSystemUiHider = SystemUiHider.getInstance(this, contentView, HIDER_FLAGS);
